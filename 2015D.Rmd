@@ -1,7 +1,8 @@
 ---
 title: "2015 Yearly Analysis"
-output: rmdformats::downcute
-downcute_theme: "chaos"
+output:
+  rmdformats::downcute
+  downcute_theme: "chaos"
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The data for the year 2015 gives us a benchmark to base our analysis on as 2015 was the first year in business for the given company.
 
-## Preparing Data for Analysis: 
+## Preparing Data for Analysis:
 
 ```{r}
 library("readxl")
@@ -29,18 +30,18 @@ Trips <- list()
 for(i in AllPaths)
 {
   for(Mypath in i)
-  { 
+  {
     Trips <- rbind(Trips,read_excel(Mypath, col_types = c("guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","numeric")))
   }
 }
 ```
 
-## Summary of Data: 
+## Summary of Data:
 
 ```{r}
 summary(Trips)
 ```
-## Analysis Metrics: 
+## Analysis Metrics:
 
 * Customer-Sub Ratio
 * Gender Demographic
@@ -60,13 +61,13 @@ for(i in UserTypeCol)
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 ```
 
-## Gender Demographic: 
+## Gender Demographic:
 ```{r}
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 ```
 
-## Trip Duration: 
+## Trip Duration:
 ```{r}
 ggplot(data = Trips, aes(trip_id, tripduration)) +
         geom_smooth()
