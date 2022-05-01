@@ -3,7 +3,7 @@
 # Introduction
 
 Welcome to the Cyclistic bike-share analysis case study! 
-In this case study, wewill perform many real-world tasks of a junior data analyst. We will work for a fictional company, Cyclistic.
+In this case study, we will perform many real-world tasks of a junior data analyst. We will work for a fictional company, Cyclistic.
 Furthermore, answer the key business questions, we will follow the steps of the data analysis process: ask, prepare, process, analyze,
 share, and act.
 
