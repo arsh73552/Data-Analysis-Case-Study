@@ -13,10 +13,10 @@ The data for the year 2015 gives us a benchmark to base our analysis on as 2015 
 
 ## Preparing Data for Analysis: 
 
-In order to prepare our data, we're going to load all the data present in excel sheets in the form of lists.
-We're gonna implement the same by using the `rbind` function.
+In order to prepare our data, we are going to load all the data present in excel sheets in the form of lists.
+We are going to implement the same by using the `rbind` function.
 
-Initially, we're going to add the paths to all of our data for the year 2015 load it into a variable named `Trips`  
+Initially, we are going to add the paths to all of our data for the year 2015 load it into a variable named `Trips`  
 ```{r}
 library("readxl")
 library("ggplot2")
@@ -53,7 +53,7 @@ summary(Trips)
 
 ## Customer-Sub Ratio:
 
-The Customer-Sub Ratio metric enables us to understand the common population demographic and figure out how likely a customer is to sub to the bike rental service.
+The Customer-Sub Ratio metric enables us to understand how likely a customer is to subscribe to the bike rental service. This information is crucial in order to make data driven decisions and predictions.
 
 The data collected here would be used as a benchmark in the upcoming years as a metric of performance.
 
@@ -71,16 +71,10 @@ pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + C
 
 ## Gender Demographic: 
 
-Understanding the Gender demographic is key. This allows us to both understand who our target audience is and also if we're lacking severely in advertising to a specific gender.
-
+Understanding the Gender demographic is key. This allows us to both understand who our target audience is and also if we are lacking in advertising to a specific gender.
+Here, as we can observe the customer base is male dominant. This could be a sign depicting lack of advertisement for female customers.
 
 ```{r}
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
-```
-
-## Trip Duration: 
-```{r}
-ggplot(data = Trips, aes(trip_id, tripduration)) +
-        geom_smooth()
 ```
