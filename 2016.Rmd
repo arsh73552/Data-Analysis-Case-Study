@@ -9,10 +9,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The data for the year 2015 gives us a benchmark to base our analysis on as 2015 was the first year in business for the given company.
-
 ## Preparing Data for Analysis: 
 
+
+In order to prepare our data, we are going to load all the data present in excel sheets in the form of lists.
+We are going to implement the same by using the `rbind` function.
+
+Initially, we are going to add the paths to all of our data for the year 2016 load it into a variable named `Trips`
 ```{r}
 library("readxl")
 library("ggplot2")
@@ -49,6 +52,11 @@ summary(Trips)
 
 ## Customer-Sub Ratio:
 
+Here we observe a significant improvement in the Customer-Subscriber Ratio.
+2015: 59.14-40.86 %
+2016: 77.41-22.59 %
+
+This shows us that the average user is highly likely to subscribe after they try out the service. Therefore, it might in the company's best interest to host events to bring in more customers such as handing out free trials, hosting public awareness events, etc.
 ```{r}
 UserTypeCol <- Trips$usertype
 Subs <- 0
@@ -61,13 +69,26 @@ for(i in UserTypeCol)
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 ```
 
-## Gender Demographic: 
+## Gender Demographic:
+
+The ratio of male to female users seems to continue to widen. This indicates a lack of awareness of the service for female customers.
+It might be in the company's best interest to advertise aggressively to female audience in order to improve the sex ratio.  
 ```{r}
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 ```
 
-## Trip Duration: 
+## Trip Duration:
+
+Looking at the trip durations corresponding to the trip ids we're able to witness a significant peek in trip durations around 1 x 10 ^ 7 trip_id.
+
+Upon further investigation, the same is observed every year during the 7th month.
+This is perhaps due to the summer season and people being relatively more active and willing to use a bike for their daily commute.
+Furthermore, Students generally are on summer break during this period further explaining the high amount of trip durations during this period.
+
+It would be in the company's best interest to advertise for the summer season and ensure sufficient supply of bikes at each station during these periods due to high demand.
+
+
 ```{r}
 ggplot(data = Trips, aes(trip_id, tripduration)) +
         geom_smooth()

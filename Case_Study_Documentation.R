@@ -39,22 +39,15 @@ paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips
 paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips_2019_Q3.xlsx", sep = ""))
 paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips_2019_Q4.xlsx", sep = ""))
 
-AllPaths <- c(paths2019)
+AllPaths <- c(paths2018)
 Trips <- list()
 for(i in AllPaths)
 {
   for(Mypath in i)
   { 
-    Trips <- rbind(Trips,read_excel(Mypath, col_types = c("guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","numeric")))
+    Trips <- rbind(Trips,read_excel(Mypath, col_types = c("guess","date","date","guess","guess","guess","guess","guess","guess","guess","guess","numeric")))
   }
 }
-
-Trips$beginTime <- format(as.POSIXct(
-  Trips$start_time),format = "%H:%M:%S")
-Trips$startDate <- as.Date(Trips$start_time)
-Trips$Endtime <- format(as.POSIXct(
-  Trips$end_time),format = "%H:%M:%S")
-Trips$EndDate <- as.Date(Trips$end_time)
 
 UserTypeCol <- Trips$usertype
 Subs <- 0
@@ -68,12 +61,26 @@ for(i in UserTypeCol)
 Trips[!is.na(Trips$gender),]
 
 View(Trips)
-Gender_Demographic <- ggplot(data = Trips) +
-                        geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 
-ggplot(data = Trips, aes(trip_id, tripduration)) +
-        geom_smooth()
+Gender_Demographic <- ggplot(data = Trips) +
+  geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 
+Trip_Duration <- ggplot(data = Trips, aes(trip_id, tripduration)) +
+  geom_line()
+
+Trips$date <- as.Date(Trips$start_time)
+Trips$month <- format(as.Date(Trips$start_time), "%m")
+Trips$day <- format(as.Date(Trips$start_time), "%A")
+
+ggplot(data = Trips[!is.na(Trips$gender),]) + 
+  geom_bar(mapping = aes(x = day, fill = usertype), stat = "count") + 
+  facet_wrap(~gender)
+
+ggplot(data = Trips) +
+  geom_bar(mapping = aes(x = month), stat = "count") 
+
+ggplot(data = Trips) +
+  geom_bar(mapping = aes(x = trip))
 
