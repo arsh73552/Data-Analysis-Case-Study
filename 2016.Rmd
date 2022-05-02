@@ -53,8 +53,11 @@ summary(Trips)
 ## Customer-Sub Ratio:
 
 Here we observe a significant improvement in the Customer-Subscriber Ratio.
+
 2015: 59.14-40.86 %
+
 2016: 77.41-22.59 %
+
 
 This shows us that the average user is highly likely to subscribe after they try out the service. Therefore, it might in the company's best interest to host events to bring in more customers such as handing out free trials, hosting public awareness events, etc.
 ```{r}
