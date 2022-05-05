@@ -1,6 +1,6 @@
 ---
 title: "2018 Yearly Analysis"
-output: 
+output:
   rmdformats::readthedown:
     code_folding: show
 ---
@@ -9,9 +9,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The data for the year 2015 gives us a benchmark to base our analysis on as 2015 was the first year in business for the given company.
+## Preparing Data for Analysis:
 
-## Preparing Data for Analysis: 
+In order to prepare our data for analysis, we are going to load all our data in the form of lists.
+We are going to do the same by providing the paths to all the data and binding them together using `rbind()` function.
+The data for the financial year is now stored in the the variable `Trips`.
 
 ```{r}
 library("readxl")
@@ -28,25 +30,27 @@ Trips <- list()
 for(i in AllPaths)
 {
   for(Mypath in i)
-  { 
+  {
     Trips <- rbind(Trips,read_excel(Mypath, col_types = c("guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","guess","numeric")))
   }
 }
 ```
 
-## Summary of Data: 
+## Summary of Data:
 
 ```{r}
 summary(Trips)
 ```
-## Analysis Metrics: 
+## Analysis Metrics:
 
 * Customer-Sub Ratio
 * Gender Demographic
-* Trip Duration
+* Month by Month
 
 ## Customer-Sub Ratio:
 
+The Customer-Sub ratio seems to start plateauing around the 80 - 20 % mark. 
+Which looking at the industry standard is a healthy Customer-Sub ratio.
 ```{r}
 UserTypeCol <- Trips$usertype
 Subs <- 0
@@ -59,14 +63,30 @@ for(i in UserTypeCol)
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 ```
 
-## Gender Demographic: 
+## Gender Demographic
+
+The Gender Demographic seems to be a recurring problem every year. It would really be in the bike rental service's best interest to advertise extensively to increase the sex ratio and further increase profits.
 ```{r}
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 ```
 
-## Trip Duration: 
+## Month by Month:
+
+Before Looking at each month of the year, we need to change our date formats to enable us to use those metrics.
+Using the `as.Date()` method, we create a new column named `month` recording the month the trip started in.
 ```{r}
-ggplot(data = Trips, aes(trip_id, tripduration)) +
-        geom_smooth()
+Trips$month <- format(as.Date(Trips$start_time), "%m")
+```
+
+We can observe, the same pattern appears in this year's analysis as well.
+People tend to make more trips using the bike rental service during the summer season which is consistent with the findings shown in the previous years discussing the possibility of advertising for summer season in order to drive profits.
+```{r}
+xy2 <- as.data.frame(table(Trips$month))
+xy2$Var1 <- factor(xy2$Var1, levels = xy2$Var1[order(xy2$Freq)])
+
+ggplot(xy2,aes(x=Var1, y = Freq, fill = Freq)) +
+    scale_fill_gradient(low = "yellow", high = "red") +
+      geom_bar(width=0.7, stat = "identity") +
+        coord_flip()
 ```

@@ -78,8 +78,16 @@ ggplot(data = Trips[!is.na(Trips$gender),]) +
   geom_bar(mapping = aes(x = day, fill = usertype), stat = "count") + 
   facet_wrap(~gender)
 
+xy2 <- as.data.frame(table(Trips$month))
+xy2$Var1 <- factor(xy2$Var1, levels = xy2$Var1[order(xy2$Freq)])
+
+ggplot(xy2,aes(x=Var1, y = Freq, fill = Freq)) +
+    scale_fill_gradient(low = "yellow", high = "red") +
+      geom_bar(width=0.7, stat = "identity") +
+        coord_flip()
+
 ggplot(data = Trips) +
-  geom_bar(mapping = aes(x = month), stat = "count") 
+  geom_bar(mapping = aes(x = month, fill = month), stat = "count")
 
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = trip))

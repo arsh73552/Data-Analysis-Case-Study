@@ -9,8 +9,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The data for the year 2015 gives us a benchmark to base our analysis on as 2015 was the first year in business for the given company.
-
 ## Preparing Data for Analysis: 
 
 ```{r}
@@ -43,9 +41,10 @@ summary(Trips)
 
 * Customer-Sub Ratio
 * Gender Demographic
-* Trip Duration
+* Day by Day
 
 ## Customer-Sub Ratio:
+
 
 ```{r}
 UserTypeCol <- Trips$usertype
@@ -65,7 +64,7 @@ ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 ```
 
-## Trip Duration: 
+## Day by Day: 
 ```{r}
 ggplot(data = Trips, aes(trip_id, tripduration)) +
         geom_smooth()
