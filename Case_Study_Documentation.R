@@ -39,7 +39,7 @@ paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips
 paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips_2019_Q3.xlsx", sep = ""))
 paths2019 <- c(paths2019, paste(getwd(),"/Yearly_Data/2019/Quarterly/Divvy_Trips_2019_Q4.xlsx", sep = ""))
 
-AllPaths <- c(paths2018)
+AllPaths <- c(paths2019)
 Trips <- list()
 for(i in AllPaths)
 {
@@ -62,8 +62,8 @@ Trips[!is.na(Trips$gender),]
 
 View(Trips)
 
-Gender_Demographic <- ggplot(data = Trips) +
-  geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
+ggplot(data = Trips, aes(gender)) +
+  geom_area(mapping = aes(fill = ..count..), stat = "count")
 
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 
@@ -74,9 +74,10 @@ Trips$date <- as.Date(Trips$start_time)
 Trips$month <- format(as.Date(Trips$start_time), "%m")
 Trips$day <- format(as.Date(Trips$start_time), "%A")
 
-ggplot(data = Trips[!is.na(Trips$gender),]) + 
-  geom_bar(mapping = aes(x = day, fill = usertype), stat = "count") + 
-  facet_wrap(~gender)
+ggplot(data = Trips) + 
+  geom_bar(mapping = aes(x = day, fill = day), stat = "count") +
+    coord_flip() +    
+      facet_wrap(~usertype)
 
 xy2 <- as.data.frame(table(Trips$month))
 xy2$Var1 <- factor(xy2$Var1, levels = xy2$Var1[order(xy2$Freq)])
@@ -86,8 +87,17 @@ ggplot(xy2,aes(x=Var1, y = Freq, fill = Freq)) +
       geom_bar(width=0.7, stat = "identity") +
         coord_flip()
 
+Sub_Percentage <- c(59.14, 77.41, 80, 81.69, 77.88)
+Years <- c(2015, 2016, 2017, 2018, 2019)
+
+ggplot(mapping = aes(x=Years, y=Sub_Percentage)) +
+  geom_area( fill="#69b3a2", alpha=0.4) +
+    geom_line(color="#69b3a2", size=2) +
+      geom_point(size=3, color="#69b3a2")
+
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = month, fill = month), stat = "count")
+  
 
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = trip))

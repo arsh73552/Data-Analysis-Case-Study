@@ -11,6 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Preparing Data for Analysis: 
 
+
+In order to prepare our data for analysis, we are going to load all our data in the form of lists.
+We are going to do the same by providing the paths to all the data and binding them together using `rbind()` function.
+The data for the financial year is now stored in the the variable `Trips`.
+
 ```{r}
 library("readxl")
 library("ggplot2")
@@ -45,6 +50,9 @@ summary(Trips)
 
 ## Customer-Sub Ratio:
 
+Here we observe a minor drop in Customer-Sub Ratio.
+The Customer-Sub ratio seems to start plateauing around the 80 - 20 % mark. 
+Which looking at the industry standard is a healthy Customer-Sub ratio.
 
 ```{r}
 UserTypeCol <- Trips$usertype
@@ -58,14 +66,38 @@ for(i in UserTypeCol)
 pie(c(Subs,Customers),label = c(paste("Subscribers = ", round(Subs*100/(Subs + Customers), 2), "%"), paste("Customers = ", round(Customers*100/(Subs + Customers), 2), "%")))
 ```
 
-## Gender Demographic: 
+```{r}
+Sub_Percentage <- c(59.14, 77.41, 80, 81.69, 77.88)
+Years <- c(2015, 2016, 2017, 2018, 2019)
+
+ggplot(mapping = aes(x=Years, y=Sub_Percentage)) +
+  geom_area( fill="#69b3a2", alpha=0.4) +
+    geom_line(color="#69b3a2", size=2) +
+      geom_point(size=3, color="#69b3a2")
+```
+
+## Gender Demographic:
+
 ```{r}
 ggplot(data = Trips) +
   geom_bar(mapping = aes(x = gender, fill = usertype), stat = "count")
 ```
 
 ## Day by Day: 
+
+Preparing data for day by day analysis:
+Here, we use the `as.Date()` method to create a new column named `day` storing the day the trip started.
+This allows us to analyze frequency of trips made on each day during the Financial Year 2019.
+
 ```{r}
-ggplot(data = Trips, aes(trip_id, tripduration)) +
-        geom_smooth()
+  Trips$day <- format(as.Date(Trips$start_time), "%A")
+```
+
+As we can observe, Customers are way more likely to use the bike rental service on weekends whereas subscribers are way more likely to use it on weekdays. This indicates that subscribers may be using the service for their commute to work/school/etc., whereas Customers are using the service as a recreational activity. Keeping this in mind we can provide weekend subscription plans for customers who just want to use the service for as a recreational activity. This would help in further increasing the Subscriber to Customer ratio. 
+
+```{r}
+ggplot(data = Trips) + 
+  geom_bar(mapping = aes(x = day, fill = day), stat = "count") +
+    coord_flip() +    
+      facet_wrap(~usertype)
 ```
